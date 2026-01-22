@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tucu UI - Micro-Frontends Development Server</title>
+    <style>
+      @import './styles.css';
+    </style>
+  </head>
+  <body>
+    <div class="mfe-background">
+      <div class="mfe-grid"></div>
+      <!-- Animations Nodes -->
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <div class="mfe-node"></div>
+      <!-- Animations Connections -->
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+      <div class="mfe-connection"></div>
+    </div>
+    <div class="container">
+      <div class="header">
+        <div class="logo-container">
+          <svg
+            width="80"
+            height="80"
+            viewBox="0 0 240 240"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style="margin-bottom: 1rem"
+          >
+            <rect width="240" height="240" rx="54" fill="#141519" />
+
+            <g transform="translate(40, 50)">
+              <path
+                d="M5 28 L90 28 L80 50 L53 50 L35 120 L8 120 L26 50 L5 50 Z"
+                fill="#94a3b8"
+              />
+
+              <path
+                d="M45 0 L130 0 L120 22 L93 22 L75 92 L48 92 L66 22 L45 22 Z"
+                fill="#0052ff"
+              />
+
+              <g transform="translate(90, 95) skewX(-15)">
+                <path
+                  d="M5 0 V14 C5 17.3 7.7 20 11 20 C14.3 20 17 17.3 17 14 V0"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="3.5"
+                  stroke-linecap="round"
+                />
+
+                <g transform="translate(30, 0)">
+                  <path
+                    d="M0 5 V20"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="3.5"
+                    stroke-linecap="round"
+                  />
+                  <rect
+                    x="-2"
+                    y="-5"
+                    width="4"
+                    height="4"
+                    rx="1"
+                    fill="#a855f7"
+                  />
+                </g>
+              </g>
+            </g>
+          </svg>
+          <h1 class="logo">
+            <span class="tucu">TUCU</span><span class="ui"> UI</span>
+          </h1>
+        </div>
+        <p class="subtitle">Micro-Frontends Development Server</p>
+        <div class="url-display">
+          <span>🌐</span>
+          <code>http://localhost:3000</code>
+          <span class="pulse">●</span>
+        </div>
+      </div>
+
+      <div class="auto-redirect" id="autoRedirect">
+        <div class="countdown-container">
+          <p class="countdown-text">Redirecting to Landing in</p>
+          <div class="countdown-wrapper">
+            <svg class="countdown-svg" width="140" height="140">
+              <circle
+                class="countdown-circle-bg"
+                cx="70"
+                cy="70"
+                r="65"
+                fill="none"
+                stroke="rgba(0, 82, 255, 0.2)"
+                stroke-width="5"
+              />
+              <circle
+                class="countdown-circle-progress"
+                id="countdownProgress"
+                cx="70"
+                cy="70"
+                r="65"
+                fill="none"
+                stroke="url(#gradient)"
+                stroke-width="5"
+                stroke-linecap="round"
+                stroke-dasharray="408"
+                stroke-dashoffset="408"
+                transform="rotate(-90 70 70)"
+              />
+              <defs>
+                <linearGradient
+                  id="gradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop
+                    offset="0%"
+                    style="stop-color: #4684ff; stop-opacity: 1"
+                  />
+                  <stop
+                    offset="100%"
+                    style="stop-color: #0052ff; stop-opacity: 1"
+                  />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="countdown-number" id="countdownNumber">60</div>
+          </div>
+          <div class="countdown-label">seconds</div>
+          <a href="/landing" class="redirect-link">Go to Landing Now →</a>
+        </div>
+      </div>
+
+      <div class="apps-grid">
+        <a href="/authentication" class="app-card">
+          <span class="app-icon">🔐</span>
+          <span class="app-name">Authentication</span>
+          <span class="app-path">/authentication</span>
+          <span class="app-port">Port: 4200</span>
+        </a>
+
+        <a href="/landing" class="app-card">
+          <span class="app-icon">🏠</span>
+          <span class="app-name">Landing</span>
+          <span class="app-path">/landing</span>
+          <span class="app-port">Port: 4201</span>
+        </a>
+
+        <a href="/user-profile" class="app-card">
+          <span class="app-icon">👤</span>
+          <span class="app-name">User Profile</span>
+          <span class="app-path">/user-profile</span>
+          <span class="app-port">Port: 4202</span>
+        </a>
+
+        <a href="/dashboard" class="app-card">
+          <span class="app-icon">📊</span>
+          <span class="app-name">Dashboard</span>
+          <span class="app-path">/dashboard</span>
+          <span class="app-port">Port: 4203</span>
+        </a>
+      </div>
+
+      <div class="info-section">
+        <h2 class="info-title">ℹ️ How It <span class="accent">Works</span></h2>
+        <p class="description">
+          All micro-frontends run on the same domain, simulating production
+          behavior. Each app is accessible via its own path and runs on an
+          internal port.
+        </p>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>Unified Domain</strong>
+            <code>localhost:3000</code>
+          </div>
+          <div class="info-item">
+            <strong>Path-based Routing</strong>
+            <code>/app-name</code>
+          </div>
+          <div class="info-item">
+            <strong>API Proxy</strong>
+            <code>/api → Backend</code>
+          </div>
+          <div class="info-item">
+            <strong>Hot Reload</strong>
+            <code>HMR Enabled</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        let countdown = 60;
+        let redirectTimer = null;
+        let progressTimer = null;
+        const redirectDiv = document.getElementById('autoRedirect');
+        const countdownNumber = document.getElementById('countdownNumber');
+        const countdownProgress = document.getElementById('countdownProgress');
+        const appCards = document.querySelectorAll('.app-card');
+        const circumference = 2 * Math.PI * 65; // r = 65
+
+        // Función para actualizar el progreso circular
+        function updateProgress() {
+          const elapsed = 60 - countdown;
+          const progress = elapsed / 60;
+          const offset = circumference * (1 - progress);
+          countdownProgress.style.strokeDashoffset = offset;
+        }
+
+        // Función para actualizar el contador visual
+        function updateCountdown() {
+          countdownNumber.textContent = countdown;
+          updateProgress();
+
+          if (countdown <= 0) {
+            clearInterval(redirectTimer);
+            clearInterval(progressTimer);
+            window.location.href = '/landing';
+          }
+        }
+
+        // Función para cancelar el redirect
+        function cancelRedirect() {
+          clearInterval(redirectTimer);
+          clearInterval(progressTimer);
+          redirectDiv.classList.add('hidden');
+        }
+
+        // Iniciar el contador
+        redirectTimer = setInterval(() => {
+          countdown--;
+          updateCountdown();
+        }, 1000);
+
+        // Actualizar progreso visual más frecuentemente para suavidad
+        progressTimer = setInterval(updateProgress, 100);
+
+        // Cancelar redirect si se hace clic en alguna tarjeta
+        appCards.forEach((card) => {
+          card.addEventListener('click', cancelRedirect);
+        });
+
+        // Inicializar el contador
+        updateCountdown();
+      })();
+    </script>
+  </body>
+</html>
