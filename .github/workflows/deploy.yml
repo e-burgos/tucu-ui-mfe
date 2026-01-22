@@ -1,0 +1,126 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "8"
+
+jobs:
+  build:
+    name: Build All Apps
+    runs-on: ubuntu-latest
+    outputs:
+      authentication: ${{ steps.build.outputs.authentication }}
+      landing: ${{ steps.build.outputs.landing }}
+      user-profile: ${{ steps.build.outputs.user-profile }}
+      dashboard: ${{ steps.build.outputs.dashboard }}
+      dev-server: ${{ steps.build.outputs.dev-server }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all apps
+        id: build
+        run: |
+          pnpm build
+          echo "authentication=dist/apps/authentication" >> $GITHUB_OUTPUT
+          echo "landing=dist/apps/landing" >> $GITHUB_OUTPUT
+          echo "user-profile=dist/apps/user-profile" >> $GITHUB_OUTPUT
+          echo "dashboard=dist/apps/dashboard" >> $GITHUB_OUTPUT
+          echo "dev-server=dist/tools/dev-server" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/apps/authentication
+            dist/apps/landing
+            dist/apps/user-profile
+            dist/apps/dashboard
+            dist/tools/dev-server
+          retention-days: 7
+
+  deploy-github-pages:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare deployment structure
+        run: |
+          mkdir -p _site
+
+          # Copy each app to its respective path
+          cp -r dist/apps/authentication _site/authentication
+          cp -r dist/apps/landing _site/landing
+          cp -r dist/apps/user-profile _site/user-profile
+          cp -r dist/apps/dashboard _site/dashboard
+
+          # Create index.html that redirects to landing
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Tucu UI - Micro Frontends</title>
+            <meta http-equiv="refresh" content="0; url=/landing/">
+            <link rel="canonical" href="/landing/">
+          </head>
+          <body>
+            <p>Redirecting to <a href="/landing/">landing page</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

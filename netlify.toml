@@ -1,0 +1,52 @@
+# Netlify configuration for unified deployment
+# This configuration allows deploying all apps under different paths on a single Netlify site
+
+[build]
+  command = "pnpm install && pnpm build"
+  publish = "netlify-dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  PNPM_VERSION = "8"
+
+# Redirect rules for SPA routing
+[[redirects]]
+  from = "/authentication/*"
+  to = "/authentication/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/landing/*"
+  to = "/landing/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/user-profile/*"
+  to = "/user-profile/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard/*"
+  to = "/dashboard/index.html"
+  status = 200
+
+# Redirect root to landing
+[[redirects]]
+  from = "/"
+  to = "/landing/"
+  status = 301
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

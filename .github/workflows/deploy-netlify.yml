@@ -1,0 +1,188 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "8"
+
+jobs:
+  build:
+    name: Build All Apps
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all apps
+        run: pnpm build
+
+      - name: Prepare Netlify deployment
+        run: |
+          mkdir -p netlify-dist
+
+          # Copy each app to its respective path
+          cp -r dist/apps/authentication netlify-dist/authentication
+          cp -r dist/apps/landing netlify-dist/landing
+          cp -r dist/apps/user-profile netlify-dist/user-profile
+          cp -r dist/apps/dashboard netlify-dist/dashboard
+
+          # Create index.html that redirects to landing
+          cat > netlify-dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Tucu UI - Micro Frontends</title>
+            <meta http-equiv="refresh" content="0; url=/landing/">
+            <link rel="canonical" href="/landing/">
+          </head>
+          <body>
+            <p>Redirecting to <a href="/landing/">landing page</a>...</p>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: netlify-build
+          path: netlify-dist
+          retention-days: 7
+
+  deploy-authentication:
+    name: Deploy Authentication to Netlify
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: netlify-build
+          path: netlify-dist
+
+      - name: Deploy to Netlify
+        id: deploy
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "netlify-dist/authentication"
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy: Authentication app"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_AUTHENTICATION }}
+
+  deploy-landing:
+    name: Deploy Landing to Netlify
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: netlify-build
+          path: netlify-dist
+
+      - name: Deploy to Netlify
+        id: deploy
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "netlify-dist/landing"
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy: Landing app"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_LANDING }}
+
+  deploy-user-profile:
+    name: Deploy User Profile to Netlify
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: netlify-build
+          path: netlify-dist
+
+      - name: Deploy to Netlify
+        id: deploy
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "netlify-dist/user-profile"
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy: User Profile app"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_USER_PROFILE }}
+
+  deploy-dashboard:
+    name: Deploy Dashboard to Netlify
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: netlify-build
+          path: netlify-dist
+
+      - name: Deploy to Netlify
+        id: deploy
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: "netlify-dist/dashboard"
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy: Dashboard app"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_DASHBOARD }}

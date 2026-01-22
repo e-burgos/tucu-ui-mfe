@@ -340,6 +340,61 @@ This opens an interactive visualization of your project dependencies in the brow
 
 - `pnpm graph` - Visualize project dependency graph
 
+## 🚀 Deployment
+
+This project includes GitHub Actions workflows for automated deployment. Each app can be deployed to different paths on the same domain.
+
+### Quick Start
+
+1. **Choose your deployment option**:
+   - **GitHub Pages** (Free) - Simple, works out of the box
+   - **Netlify** (Free) - Recommended for production
+   - **Vercel** (Free) - Alternative to Netlify
+
+2. **Enable GitHub Actions** in your repository settings
+
+3. **Push to main branch** - Deployment will happen automatically
+
+### Deployment Options
+
+#### Option 1: GitHub Pages (Free)
+
+- ✅ Free for public repositories
+- ✅ Automatic deployment via GitHub Actions
+- ✅ No additional setup required
+
+**Setup:**
+1. Go to Settings → Pages
+2. Source: GitHub Actions
+3. Push to `main` branch
+
+**URLs:**
+- `https://yourusername.github.io/repo-name/authentication/`
+- `https://yourusername.github.io/repo-name/landing/`
+- `https://yourusername.github.io/repo-name/user-profile/`
+- `https://yourusername.github.io/repo-name/dashboard/`
+
+#### Option 2: Netlify (Free - Recommended)
+
+- ✅ Free tier with 100GB bandwidth/month
+- ✅ Better performance and features
+- ✅ Custom domains support
+
+**Setup:**
+1. Create Netlify account
+2. Add secrets to GitHub:
+   - `NETLIFY_AUTH_TOKEN`
+   - `NETLIFY_SITE_ID`
+3. Use `.github/workflows/deploy-unified-netlify.yml`
+
+**URLs:**
+- `https://your-site.netlify.app/authentication/`
+- `https://your-site.netlify.app/landing/`
+- `https://your-site.netlify.app/user-profile/`
+- `https://your-site.netlify.app/dashboard/`
+
+> **📖 For complete deployment guide, see [Deployment Guide](./docs/DEPLOYMENT.md)**
+
 ## 🏛️ Architecture
 
 > **📖 For detailed architecture information, component hierarchy, and how MFE works internally, see the [Architecture Guide](./docs/ARCHITECTURE.md).**
