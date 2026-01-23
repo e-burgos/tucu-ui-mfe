@@ -18,11 +18,6 @@ export function App() {
       layout={
         isAuthenticated ? LAYOUT_OPTIONS.HORIZONTAL : LAYOUT_OPTIONS.CLEAN
       }
-      logo={{
-        name: 'USER',
-        secondName: 'PROFILE',
-        path: APP_PATHS.USER_PROFILE,
-      }}
     />
   );
 }
