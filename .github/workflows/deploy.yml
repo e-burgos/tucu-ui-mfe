@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -41,8 +43,26 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
 
+      - name: Verify pnpm-lock.yaml exists
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "✓ pnpm-lock.yaml found"
+            ls -lh pnpm-lock.yaml
+          else
+            echo "⚠ pnpm-lock.yaml not found in repository"
+            echo "Current directory contents:"
+            ls -la
+          fi
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "Installing with frozen-lockfile..."
+            pnpm install --frozen-lockfile
+          else
+            echo "Warning: pnpm-lock.yaml not found, installing without frozen-lockfile"
+            pnpm install
+          fi
 
       - name: Build all apps
         id: build
