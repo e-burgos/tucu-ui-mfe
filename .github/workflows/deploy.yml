@@ -46,6 +46,13 @@ jobs:
 
       - name: Build all apps
         id: build
+        env:
+          VITE_APP_ENVIRONMENT: production
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://api.example.com/api' }}
+          VITE_APP_AUTHENTICATION_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/authentication
+          VITE_APP_LANDING_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/landing
+          VITE_APP_USER_PROFILE_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/user-profile
+          VITE_APP_DASHBOARD_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard
         run: |
           pnpm build
           echo "authentication=dist/apps/authentication" >> $GITHUB_OUTPUT
@@ -112,6 +119,40 @@ jobs:
           </head>
           <body>
             <p>Redirecting to <a href="/landing/">landing page</a>...</p>
+          </body>
+          </html>
+          EOF
+
+          # Create 404.html for SPA routing (GitHub Pages fallback)
+          # This ensures that direct navigation to routes works
+          cat > _site/404.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>404 - Page Not Found</title>
+            <script>
+              // GitHub Pages SPA routing fallback
+              // Redirect to the appropriate app based on path
+              const path = window.location.pathname;
+              const repoName = path.split('/')[1] || '';
+              
+              if (path.includes('/authentication')) {
+                window.location.href = '/authentication/';
+              } else if (path.includes('/landing')) {
+                window.location.href = '/landing/';
+              } else if (path.includes('/user-profile')) {
+                window.location.href = '/user-profile/';
+              } else if (path.includes('/dashboard')) {
+                window.location.href = '/dashboard/';
+              } else {
+                window.location.href = '/landing/';
+              }
+            </script>
+          </head>
+          <body>
+            <p>Redirecting...</p>
           </body>
           </html>
           EOF
