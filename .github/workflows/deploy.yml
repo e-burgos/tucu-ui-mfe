@@ -69,6 +69,7 @@ jobs:
         env:
           VITE_APP_ENVIRONMENT: production
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://api.example.com/api' }}
+          VITE_BASE_PATH: /${{ github.event.repository.name }}
           VITE_APP_AUTHENTICATION_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/authentication
           VITE_APP_LANDING_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/landing
           VITE_APP_USER_PROFILE_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/user-profile
@@ -117,6 +118,8 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Prepare deployment structure
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
         run: |
           mkdir -p _site
 
@@ -127,25 +130,25 @@ jobs:
           cp -r dist/apps/dashboard _site/dashboard
 
           # Create index.html that redirects to landing
-          cat > _site/index.html << 'EOF'
+          cat > _site/index.html << EOF
           <!DOCTYPE html>
           <html lang="en">
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Tucu UI - Micro Frontends</title>
-            <meta http-equiv="refresh" content="0; url=/landing/">
-            <link rel="canonical" href="/landing/">
+            <meta http-equiv="refresh" content="0; url=/${REPO_NAME}/landing/">
+            <link rel="canonical" href="/${REPO_NAME}/landing/">
           </head>
           <body>
-            <p>Redirecting to <a href="/landing/">landing page</a>...</p>
+            <p>Redirecting to <a href="/${REPO_NAME}/landing/">landing page</a>...</p>
           </body>
           </html>
           EOF
 
           # Create 404.html for SPA routing (GitHub Pages fallback)
           # This ensures that direct navigation to routes works
-          cat > _site/404.html << 'EOF'
+          cat > _site/404.html << EOF
           <!DOCTYPE html>
           <html lang="en">
           <head>
@@ -156,18 +159,18 @@ jobs:
               // GitHub Pages SPA routing fallback
               // Redirect to the appropriate app based on path
               const path = window.location.pathname;
-              const repoName = path.split('/')[1] || '';
+              const repoName = '${REPO_NAME}';
               
               if (path.includes('/authentication')) {
-                window.location.href = '/authentication/';
+                window.location.href = '/' + repoName + '/authentication/';
               } else if (path.includes('/landing')) {
-                window.location.href = '/landing/';
+                window.location.href = '/' + repoName + '/landing/';
               } else if (path.includes('/user-profile')) {
-                window.location.href = '/user-profile/';
+                window.location.href = '/' + repoName + '/user-profile/';
               } else if (path.includes('/dashboard')) {
-                window.location.href = '/dashboard/';
+                window.location.href = '/' + repoName + '/dashboard/';
               } else {
-                window.location.href = '/landing/';
+                window.location.href = '/' + repoName + '/landing/';
               }
             </script>
           </head>

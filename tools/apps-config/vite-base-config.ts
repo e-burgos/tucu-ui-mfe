@@ -131,8 +131,13 @@ export async function generateViteConfigBase({
         }
       : undefined;
 
+  // Use VITE_BASE_PATH if provided (for GitHub Pages), otherwise use default /${name}
+  const basePath = process.env.VITE_BASE_PATH 
+    ? `${process.env.VITE_BASE_PATH}/${name}`
+    : `/${name}`;
+
   return {
-    base: `/${name}`,
+    base: basePath,
     root: modulePath,
     define: defineEnvironment,
     cacheDir: `../../node_modules/.vite/apps/${name}`,
