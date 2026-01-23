@@ -447,6 +447,7 @@ const IntegrationGuide = () => {
                 </Typography>
                 <CodeBlock
                   language="tsx"
+                  className="overflow-auto w-full"
                   code={`import { ShellWrapper } from '@e-burgos-mfe/shell';
 import { APP_PATHS, APP_URLS } from '@e-burgos-mfe/utils';
 import { LAYOUT_OPTIONS } from '@e-burgos/tucu-ui';
@@ -477,6 +478,7 @@ export function App() {
 
                 <CodeBlock
                   language="tsx"
+                  className="overflow-auto w-full"
                   code={`import { type IAppRouteConfig } from '@e-burgos/tucu-ui';
 import { APP_PATHS } from '@e-burgos-mfe/utils';
 

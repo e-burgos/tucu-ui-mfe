@@ -296,5 +296,14 @@ If apps don't load correctly when using `pnpm dev:unified`:
 
 ---
 
+## Additional Resources
+
+- [Main README](../README.md) - Overview of the micro-frontend architecture
+- [Integration Guide](./INTEGRATION-GUIDE.md) - Step-by-step guide for integrating a new micro-frontend
+- [Architecture Guide](./ARCHITECTURE.md) - Architecture overview and how MFE works internally
+- [GitHub Pages Deployment Guide](./DEPLOYMENT-GITHUB-PAGES.md) - Complete deployment guide for GitHub Pages
+
+---
+
 **Document Version**: 1.0  
-**Last Updated**: 2026-01-13
+**Last Updated**: 2026-01-23

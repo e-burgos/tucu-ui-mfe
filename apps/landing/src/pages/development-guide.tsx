@@ -223,6 +223,7 @@ const DevelopmentGuide = () => {
             </div>
             <CodeBlock
               language="bash"
+              className="overflow-auto w-full"
               noExpand={true}
               code={`pnpm dev:unified`}
             />
@@ -293,7 +294,7 @@ const DevelopmentGuide = () => {
                   Unified Mode (Recommended)
                 </Typography>
               </div>
-              <CodeBlock language="bash" code={`pnpm dev:unified`} />
+              <CodeBlock language="bash" className="overflow-auto w-full" code={`pnpm dev:unified`} />
               <Typography
                 tag="p"
                 className="text-gray-600 dark:text-gray-400 mt-4 text-sm"
@@ -321,6 +322,7 @@ const DevelopmentGuide = () => {
               <div className="space-y-3">
                 <CodeBlock
                   language="bash"
+                  className="overflow-auto w-full"
                   code={`pnpm authentication
 pnpm landing
 pnpm user-profile
@@ -556,6 +558,7 @@ pnpm dashboard`}
                     </Typography>
                     <CodeBlock
                       language="ts"
+                      className="overflow-auto w-full"
                       code={`export const API_BASE_URL = isLocal ? '/api' : apiBaseUrlFromEnv;
 export const AUTH_BASE_URL = \`\${API_BASE_URL}/auth\`;`}
                     />
@@ -775,6 +778,7 @@ VITE_GOOGLE_ANALYTICS_TAG_ID=your-id`}
           <CardContainer className="p-6 lg:p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-dark mb-8">
             <CodeBlock
               language="ts"
+              className="overflow-auto w-full"
               code={`import { Component } from '@e-burgos/tucu-ui';
 import { APP_PATHS, APP_URLS } from '@e-burgos-mfe/utils';
 import { ShellWrapper } from '@e-burgos-mfe/shell';

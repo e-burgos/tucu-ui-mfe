@@ -14,9 +14,11 @@ High-level overview of the Micro-Frontend architecture implementation with Tucu-
 
 ## Architecture Overview
 
-This project implements a **path-based Micro-Frontend architecture** where:
+This project implements a **path-based Micro-Frontend architecture** powered by **`@e-burgos/tucu-ui`** where:
 
-- Each app is deployed independently on its own path (`/authentication`, `/landing`, etc.)
+- Each app is deployed independently on its own path
+  - **Local development**: `/authentication`, `/landing`, etc.
+  - **GitHub Pages**: `/repo-name/authentication`, `/repo-name/landing`, etc. (includes repository name)
 - All apps share a unified orchestrator through `@e-burgos-mfe/shell`
 - Tucu-UI's `ThemeProvider` supports MFE mode via `architecturalPatterns="mfe"`
 - Apps can navigate between each other using full page reloads or in-app routing
@@ -160,11 +162,13 @@ App Component
 
 ### Request Flow
 
-1. **User navigates to `/landing`**
-2. **Unified Dev Server** proxies request to landing app (port 4201)
-3. **Landing App** loads and renders `ShellWrapper`
-4. **ShellWrapper** wraps with `ThemeProvider` in MFE mode
-5. **ThemeProvider** sets up routing and layout
+1. **User navigates to app path**
+   - **Local dev**: `/landing`
+   - **GitHub Pages**: `/repo-name/landing` (includes repository name)
+2. **Unified Dev Server** (local) or **GitHub Pages** (production) serves the app
+3. **App** loads and renders `ShellWrapper`
+4. **ShellWrapper** wraps with `ThemeProvider` in MFE mode (`architecturalPatterns="mfe"`)
+5. **ThemeProvider** sets up routing and layout via `MfeAppThemeProvider`
 6. **Route matches** and component renders
 
 ### Navigation Flow
@@ -224,7 +228,8 @@ micro-frontends/
 ├── docs/                    # Documentation
 │   ├── INTEGRATION-GUIDE.md
 │   ├── DEVELOPMENT.md
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md
+│   └── DEPLOYMENT-GITHUB-PAGES.md
 ├── temp/                    # Analysis documents
 │   ├── MFE-ARCHITECTURE-ANALYSIS.md
 │   └── SHELL-LIBRARY-AND-MFE-IMPLEMENTATION-ANALYSIS.md
@@ -256,8 +261,9 @@ For detailed analysis and implementation details, see:
 
 - **[Integration Guide](./INTEGRATION-GUIDE.md)** - Step-by-step guide for integrating a new micro-frontend
 - **[Development Guide](./DEVELOPMENT.md)** - Development workflow and dev server details
+- **[GitHub Pages Deployment Guide](./DEPLOYMENT-GITHUB-PAGES.md)** - Complete deployment guide for GitHub Pages
 
 ---
 
 **Document Version**: 1.0  
-**Last Updated**: 2026-01-13
+**Last Updated**: 2026-01-23

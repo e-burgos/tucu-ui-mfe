@@ -6,6 +6,9 @@ const ArchitectureOverview = lazy(
   () => import('../pages/architecture-overview'),
 );
 const DevelopmentGuide = lazy(() => import('../pages/development-guide'));
+const DeploymentGitHubPages = lazy(
+  () => import('../pages/deployment-github-pages'),
+);
 
 export const InitialPageComponent: React.FC = (props) => (
   <InitialPage {...props} />
@@ -21,4 +24,8 @@ export const ArchitectureOverviewComponent: React.FC = (props) => (
 
 export const DevelopmentGuideComponent: React.FC = (props) => (
   <DevelopmentGuide {...props} />
+);
+
+export const DeploymentGitHubPagesComponent: React.FC = (props) => (
+  <DeploymentGitHubPages {...props} />
 );

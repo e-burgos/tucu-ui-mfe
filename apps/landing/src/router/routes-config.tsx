@@ -5,6 +5,7 @@ import {
   IntegrationGuideComponent,
   ArchitectureOverviewComponent,
   DevelopmentGuideComponent,
+  DeploymentGitHubPagesComponent,
 } from './entry-points';
 
 export const ROUTES = {
@@ -12,6 +13,7 @@ export const ROUTES = {
   IntegrationGuide: `${APP_PATHS.LANDING}/integration-guide`,
   ArchitectureOverview: `${APP_PATHS.LANDING}/architecture-overview`,
   DevelopmentGuide: `${APP_PATHS.LANDING}/development-guide`,
+  DeploymentGitHubPages: `${APP_PATHS.LANDING}/deployment-github-pages`,
 };
 
 export const useRoutesConfig = (): IAppRouteConfig[] => {
@@ -35,6 +37,11 @@ export const useRoutesConfig = (): IAppRouteConfig[] => {
       key: 'development-guide',
       path: ROUTES.DevelopmentGuide,
       element: <DevelopmentGuideComponent />,
+    },
+    {
+      key: 'deployment-github-pages',
+      path: ROUTES.DeploymentGitHubPages,
+      element: <DeploymentGitHubPagesComponent />,
     },
   ].filter((route) => route);
 };

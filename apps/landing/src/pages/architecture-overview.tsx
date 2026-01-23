@@ -675,6 +675,7 @@ const ArchitectureOverview = () => {
                 </Typography>
                 <CodeBlock
                   language="tsx"
+                  className="overflow-auto w-full"
                   code={`<ShellWrapper
   basePath={APP_PATHS.AUTHENTICATION}
   appRoutesConfig={routesConfig}

@@ -29,11 +29,13 @@ This guide will walk you through creating a new micro-frontend application that 
 
 ### Key Concepts
 
-- **Path-based Routing**: Each app is deployed on its own path (`/your-app`)
-- **Unified Orchestration**: All apps share the `ShellWrapper` component
-- **Tucu-UI MFE Support**: Built-in MFE mode in `ThemeProvider` via discriminated unions
+- **Path-based Routing**: Each app is deployed on its own path
+  - **Local development**: `/your-app`
+  - **GitHub Pages**: `/repo-name/your-app` (includes repository name)
+- **Unified Orchestration**: All apps share the `ShellWrapper` component that automatically configures Tucu-UI MFE mode
+- **Tucu-UI MFE Support**: Built-in MFE mode in `ThemeProvider` via `architecturalPatterns="mfe"` and TypeScript discriminated unions
 - **Smart Navigation**: Automatic detection of in-app vs inter-app navigation
-- **Route Protection**: Built-in support for public/private routes in MFE mode
+- **Route Protection**: Built-in support for public/private routes in MFE mode via Tucu-UI's `MfeAppRoutesProvider`
 
 ---
 
@@ -160,6 +162,8 @@ export const APP_URLS = {
   YOUR_APP: import.meta.env.VITE_APP_YOUR_APP_URL, // Add your app URL
 };
 ```
+
+> **Note**: These paths are for local development. In GitHub Pages deployment, paths automatically include the repository name (e.g., `/repo-name/your-app`) via environment variables configured in the workflow. See [GitHub Pages Deployment Guide](./DEPLOYMENT-GITHUB-PAGES.md) for details.
 
 ### Step 3: Update Environment Variables
 
@@ -926,9 +930,12 @@ export function App() {
 ## Additional Resources
 
 - [Main README](../README.md) - Overview of the micro-frontend architecture
+- [Architecture Guide](./ARCHITECTURE.md) - Architecture overview and how MFE works internally
+- [Development Guide](./DEVELOPMENT.md) - Development workflow and dev server details
+- [GitHub Pages Deployment Guide](./DEPLOYMENT-GITHUB-PAGES.md) - Complete deployment guide for GitHub Pages
 - [Tucu-UI Documentation](https://tucu-ui.netlify.app) - Official Tucu-UI documentation
 
 ---
 
 **Document Version**: 1.0  
-**Last Updated**: 2026-01-13
+**Last Updated**: 2026-01-23

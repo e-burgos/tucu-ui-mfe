@@ -1,6 +1,18 @@
 # Tucu UI MFE (Micro Frontend)
 
-A monorepo micro frontend architecture built with Nx, React, TypeScript, and Vite. This project contains multiple independent applications that can be developed, built, and deployed separately while sharing common libraries and components.
+A monorepo micro frontend architecture built with Nx, React, TypeScript, and Vite, powered by **`@e-burgos/tucu-ui`** as the MFE support library. This project demonstrates how to build and deploy multiple independent applications using Tucu-UI's built-in Micro Frontend capabilities.
+
+## 🎯 Powered by Tucu-UI
+
+This project showcases **`@e-burgos/tucu-ui`** as a comprehensive MFE support library that provides:
+
+- ✅ **Built-in MFE Mode** - `ThemeProvider` with `architecturalPatterns="mfe"` support
+- ✅ **Route Protection** - Automatic public/private route handling in MFE mode
+- ✅ **Unified Navigation** - Smart navigation between micro-frontends
+- ✅ **Design System** - Complete UI component library with MFE awareness
+- ✅ **Type-Safe Configuration** - TypeScript discriminated unions for MFE props
+
+Each micro frontend in this architecture leverages Tucu-UI's MFE capabilities through the `ShellWrapper` component, which automatically configures `ThemeProvider` in MFE mode.
 
 > **🚀 New to this project?** Start with the [Complete Integration Guide](./docs/INTEGRATION-GUIDE.md) for a comprehensive step-by-step guide, or check the [Quick Integration Guide](#-integrating-a-new-micro-frontend-with-eburgostucu-ui) below for a quick reference.
 
@@ -144,9 +156,40 @@ Each app will be available on its configured port:
 
 > **📖 For detailed information about the development server, API proxy, environment variables, and development workflow, see the [Development Guide](./docs/DEVELOPMENT.md).**
 
-## 🎯 Integrating a New Micro Frontend
+## 🎯 Integrating a New Micro Frontend with Tucu-UI
 
 > **📖 For a complete, detailed guide with step-by-step instructions, examples, and troubleshooting, see the [Complete Integration Guide](./docs/INTEGRATION-GUIDE.md).**
+
+### How Tucu-UI Supports MFE Architecture
+
+**`@e-burgos/tucu-ui`** provides native MFE support through its `ThemeProvider` component:
+
+1. **MFE Mode Activation**: When `architecturalPatterns="mfe"` is set, `ThemeProvider` automatically:
+   - Renders `MfeAppThemeProvider` instead of `StandaloneAppThemeProvider`
+   - Sets up `BrowserRouter` with proper base path handling
+   - Configures `MfeAppRoutesProvider` for route protection
+   - Separates routes into public, private, and disabled categories
+
+2. **ShellWrapper Integration**: The `@e-burgos-mfe/shell` library provides `ShellWrapper` that:
+   - **Automatically sets MFE mode** - Always passes `architecturalPatterns="mfe"` to `ThemeProvider`
+   - Wraps each app with Tucu-UI's `ThemeProvider` in MFE mode
+   - Provides React Query context via `QueryProvider`
+   - Generates navigation menu items that navigate between micro-frontends
+   - Composes header elements (AppLabel, NavOptions, custom elements)
+
+3. **Type-Safe Configuration**: Tucu-UI uses TypeScript discriminated unions:
+   ```typescript
+   // MFE mode requires these props:
+   {
+     architecturalPatterns: "mfe"
+     basePath: string
+     appRoutesConfig: IAppRouteConfig[]
+     isAuthenticated: boolean
+     loginUrl: string
+   }
+   ```
+
+### Quick Integration Steps
 
 Each micro frontend in this architecture:
 
@@ -161,7 +204,7 @@ Each micro frontend in this architecture:
 
 1. Create app structure
 2. Configure Vite and routes
-3. Wrap with `ShellWrapper`
+3. Wrap with `ShellWrapper` (automatically configures Tucu-UI MFE mode)
 4. Add environment variables
 
 See the [Complete Integration Guide](./docs/INTEGRATION-GUIDE.md) for detailed instructions, code examples, and best practices.
@@ -342,58 +385,39 @@ This opens an interactive visualization of your project dependencies in the brow
 
 ## 🚀 Deployment
 
-This project includes GitHub Actions workflows for automated deployment. Each app can be deployed to different paths on the same domain.
+This project includes GitHub Actions workflows for automated deployment to GitHub Pages. Each app is deployed to different paths on the same domain.
 
 ### Quick Start
 
-1. **Choose your deployment option**:
-   - **GitHub Pages** (Free) - Simple, works out of the box
-   - **Netlify** (Free) - Recommended for production
-   - **Vercel** (Free) - Alternative to Netlify
+1. **Enable GitHub Pages** in your repository settings:
+   - Go to Settings → Pages
+   - Source: GitHub Actions
+   - **Important**: Leave "Custom domain" field blank
 
-2. **Enable GitHub Actions** in your repository settings
+2. **Push to main branch** - Deployment will happen automatically via GitHub Actions
 
-3. **Push to main branch** - Deployment will happen automatically
-
-### Deployment Options
-
-#### Option 1: GitHub Pages (Free)
+### GitHub Pages Deployment
 
 - ✅ Free for public repositories
 - ✅ Automatic deployment via GitHub Actions
 - ✅ No additional setup required
-
-**Setup:**
-1. Go to Settings → Pages
-2. Source: GitHub Actions
-3. Push to `main` branch
+- ✅ All apps deployed under repository subdirectory
 
 **URLs:**
+- `https://yourusername.github.io/repo-name/` → Redirects to landing
 - `https://yourusername.github.io/repo-name/authentication/`
 - `https://yourusername.github.io/repo-name/landing/`
 - `https://yourusername.github.io/repo-name/user-profile/`
 - `https://yourusername.github.io/repo-name/dashboard/`
+- `https://yourusername.github.io/repo-name/dev-server/`
 
-#### Option 2: Netlify (Free - Recommended)
+**Features:**
+- Automatic base path configuration (includes repository name)
+- SPA routing support via 404.html fallback
+- Environment variables automatically configured for routing
+- All apps share the same domain with path-based routing
 
-- ✅ Free tier with 100GB bandwidth/month
-- ✅ Better performance and features
-- ✅ Custom domains support
-
-**Setup:**
-1. Create Netlify account
-2. Add secrets to GitHub:
-   - `NETLIFY_AUTH_TOKEN`
-   - `NETLIFY_SITE_ID`
-3. Use `.github/workflows/deploy-unified-netlify.yml`
-
-**URLs:**
-- `https://your-site.netlify.app/authentication/`
-- `https://your-site.netlify.app/landing/`
-- `https://your-site.netlify.app/user-profile/`
-- `https://your-site.netlify.app/dashboard/`
-
-> **📖 For complete deployment guide, see [Deployment Guide](./docs/DEPLOYMENT.md)**
+> **📖 For complete deployment guide with implementation details, see [GitHub Pages Deployment Guide](./docs/DEPLOYMENT-GITHUB-PAGES.md)**
 
 ## 🏛️ Architecture
 
@@ -401,32 +425,62 @@ This project includes GitHub Actions workflows for automated deployment. Each ap
 
 ### Technology Stack
 
+- **@e-burgos/tucu-ui** - **Core MFE Support Library** - Design system and UI component library with built-in Micro Frontend capabilities
+  - `ThemeProvider` with `architecturalPatterns="mfe"` support
+  - `MfeAppThemeProvider` for MFE routing and route protection
+  - Complete UI component library with MFE awareness
 - **Nx** - Monorepo tooling and build system
 - **React 19** - UI framework
-- **TypeScript** - Type-safe JavaScript
+- **TypeScript** - Type-safe JavaScript with discriminated unions for MFE props
 - **Vite** - Build tool and dev server
 - **Tailwind CSS** - Utility-first CSS framework (via `@e-burgos/tucu-ui`)
 - **React Query** - Data fetching and state management
 - **Zustand** - Lightweight state management
-- **@e-burgos/tucu-ui** - Design system and UI component library with built-in MFE support
 
 ### Architecture Overview
 
-This project implements a **path-based Micro-Frontend architecture** where:
+This project implements a **path-based Micro-Frontend architecture** powered by **`@e-burgos/tucu-ui`** where:
 
 - Each app is deployed independently on its own path (`/authentication`, `/landing`, etc.)
-- All apps share a unified orchestrator through `@e-burgos-mfe/shell`
-- Tucu-UI's `ThemeProvider` supports MFE mode via `architecturalPatterns="mfe"`
+- All apps use Tucu-UI's `ThemeProvider` in MFE mode via `architecturalPatterns="mfe"`
+- `ShellWrapper` automatically configures Tucu-UI's MFE capabilities for each app
 - Apps can navigate between each other using full page reloads or in-app routing
+- Route protection is handled by Tucu-UI's `MfeAppRoutesProvider`
+
+### How Tucu-UI Powers This Architecture
+
+**`@e-burgos/tucu-ui`** is the foundation of this MFE architecture:
+
+1. **ThemeProvider MFE Mode**: 
+   - When `architecturalPatterns="mfe"` is set, `ThemeProvider` automatically switches to MFE mode
+   - Uses TypeScript discriminated unions for type-safe MFE configuration
+   - Provides `MfeAppThemeProvider` with built-in routing and route protection
+
+2. **Route Protection**:
+   - Tucu-UI's `MfeAppRoutesProvider` automatically handles public/private routes
+   - Redirects unauthenticated users to `loginUrl` for protected routes
+   - Supports route disabling via `disabled: true` in route config
+
+3. **Navigation System**:
+   - Smart navigation detection (in-app vs inter-app)
+   - Automatic menu generation based on app paths
+   - Full page reload for cross-app navigation
+
+4. **Design System Integration**:
+   - All UI components from Tucu-UI work seamlessly in MFE mode
+   - Consistent theming across all micro-frontends
+   - Shared component library with MFE awareness
 
 ### Key Features
 
+- **Tucu-UI MFE Support** - Built-in MFE mode in `ThemeProvider` with `architecturalPatterns="mfe"`
 - **Micro Frontend Architecture** - Independent, deployable applications
 - **Path-based Routing** - Each app accessible via its own path
-- **Unified Orchestration** - Shared `ShellWrapper` component for all apps
-- **Tucu-UI MFE Support** - Built-in MFE mode in `ThemeProvider`
-- **Shared Component Library** - Reusable UI components across apps
-- **Type-Safe Imports** - TypeScript path mappings for clean imports
+- **Unified Orchestration** - Shared `ShellWrapper` component that configures Tucu-UI MFE mode
+- **Route Protection** - Automatic public/private route handling via Tucu-UI's `MfeAppRoutesProvider`
+- **Smart Navigation** - Automatic detection of in-app vs inter-app navigation
+- **Shared Component Library** - Reusable UI components from Tucu-UI across apps
+- **Type-Safe Configuration** - TypeScript discriminated unions for MFE props
 - **Independent Deployment** - Each app can be built and deployed separately
 
 ## 📁 Project Organization
@@ -517,23 +571,29 @@ nx generate @nx/react:component my-component --project=authentication
 
 ### Completed Features ✅
 
+- ✅ **Tucu-UI MFE Integration** - Complete integration with `@e-burgos/tucu-ui` MFE capabilities
 - ✅ **Micro Frontend Architecture** - Four independent applications (authentication, landing, user-profile, dashboard)
-- ✅ **Shell Integration** - Complete integration with `@e-burgos/tucu-ui` through ShellWrapper
+- ✅ **ShellWrapper Component** - Automatic Tucu-UI MFE mode configuration via `architecturalPatterns="mfe"`
+- ✅ **Route Protection** - Automatic public/private route handling via Tucu-UI's `MfeAppRoutesProvider`
 - ✅ **Unified Development Server** - All apps accessible on same domain with API proxy
 - ✅ **Shared Libraries** - API client, auth security, shell wrapper, and utilities
-- ✅ **Routing System** - Independent routing configuration for each app
-- ✅ **TypeScript Configuration** - Type-safe imports across apps and libraries
+- ✅ **Routing System** - Independent routing configuration for each app using `IAppRouteConfig[]`
+- ✅ **TypeScript Configuration** - Type-safe imports and MFE props via discriminated unions
 - ✅ **Vite Configuration** - Optimized build configuration for all apps
+- ✅ **GitHub Pages Deployment** - Automated deployment with proper base path configuration
 
 ### Architecture Highlights
 
+- **Tucu-UI Powered** - Built on `@e-burgos/tucu-ui`'s native MFE support
+- **MFE Mode** - All apps use `ThemeProvider` with `architecturalPatterns="mfe"`
 - **Independent Deployment** - Each app can be built and deployed separately
 - **Path-based Routing** - Each app deployed on its own path
-- **Unified Orchestration** - `ShellWrapper` provides consistent integration
-- **Tucu-UI MFE Support** - Built-in MFE mode in `ThemeProvider`
+- **Unified Orchestration** - `ShellWrapper` automatically configures Tucu-UI MFE mode
+- **Route Protection** - Tucu-UI handles public/private routes automatically
+- **Smart Navigation** - Automatic detection of in-app vs inter-app navigation
 - **Code Sharing** - Shared libraries prevent code duplication
 - **Development Experience** - Unified dev server eliminates CORS issues
-- **Type Safety** - Full TypeScript support with path mappings
+- **Type Safety** - Full TypeScript support with discriminated unions for MFE props
 
 ## 📄 License
 

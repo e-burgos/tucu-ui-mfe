@@ -96,6 +96,13 @@ const InitialPage = () => {
       icon: <LucideIcons.Terminal className="w-5 h-5" />,
       href: ROUTES.DevelopmentGuide,
     },
+    {
+      title: 'GitHub Pages Deployment',
+      description:
+        'Complete guide for deploying all apps to GitHub Pages using GitHub Actions',
+      icon: <LucideIcons.Rocket className="w-5 h-5" />,
+      href: ROUTES.DeploymentGitHubPages,
+    },
   ];
 
   return (
@@ -229,7 +236,7 @@ const InitialPage = () => {
                         className="text-gray-600 dark:text-gray-400 text-sm"
                       >
                         Each app deployed on its own path (/authentication,
-                        /landing, etc.)
+                        /landing, etc. in local dev; /repo-name/app-name in GitHub Pages)
                       </Typography>
                     </div>
                   </li>

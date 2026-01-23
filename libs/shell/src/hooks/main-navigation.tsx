@@ -57,6 +57,14 @@ export const useMainNavigation = () => {
               : `${APP_URLS.LANDING}/integration-guide`,
             isActive: isActive(`${APP_PATHS.LANDING}/integration-guide`),
           },
+          {
+            name: 'Deployment',
+            path: `${APP_PATHS.LANDING}/deployment-github-pages`,
+            href: isLandingApp
+              ? undefined
+              : `${APP_URLS.LANDING}/deployment-github-pages`,
+            isActive: isActive(`${APP_PATHS.LANDING}/deployment-github-pages`),
+          },
         ],
       },
       {

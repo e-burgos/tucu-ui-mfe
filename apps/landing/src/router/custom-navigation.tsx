@@ -51,6 +51,15 @@ export const useCustomNavigation = () => {
         isActive: isActive(`${APP_PATHS.LANDING}/integration-guide`),
         icon: <LucideIcons.Network size={24} />,
       },
+      {
+        name: 'Deployment',
+        path: `${APP_PATHS.LANDING}/deployment-github-pages`,
+        href: isLandingApp
+          ? undefined
+          : `${APP_URLS.LANDING}/deployment-github-pages`,
+        isActive: isActive(`${APP_PATHS.LANDING}/deployment-github-pages`),
+        icon: <LucideIcons.GitBranch size={24} />,
+      },
     ],
     [
       isLandingApp,
