@@ -16,7 +16,11 @@ export function App() {
       isAuthenticated={isAuthenticated}
       loginUrl={APP_PATHS.AUTHENTICATION}
       layout={isAuthenticated ? LAYOUT_OPTIONS.ADMIN : LAYOUT_OPTIONS.CLEAN}
-
+      logo={{
+        name: 'TUCUUI',
+        secondName: 'MFE',
+        path: APP_PATHS.DASHBOARD,
+      }}
     />
   );
 }

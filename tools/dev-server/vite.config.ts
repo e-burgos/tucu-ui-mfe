@@ -181,10 +181,27 @@ export default defineConfig(({ mode }) => {
       {
         name: 'html-transform',
         transformIndexHtml(html: string) {
-          return html.replace(
+          // Replace base tag
+          let transformed = html.replace(
             /<base[^>]*>/i,
             `<base href="${basePath}">`
           );
+          
+          // Replace app URLs from environment variables
+          const appUrls = {
+            AUTHENTICATION: env.VITE_APP_AUTHENTICATION_URL || '/authentication',
+            LANDING: env.VITE_APP_LANDING_URL || '/landing',
+            USER_PROFILE: env.VITE_APP_USER_PROFILE_URL || '/user-profile',
+            DASHBOARD: env.VITE_APP_DASHBOARD_URL || '/dashboard',
+          };
+          
+          // Replace placeholders in href attributes and scripts
+          transformed = transformed.replace(/%APP_AUTHENTICATION_URL%/g, appUrls.AUTHENTICATION);
+          transformed = transformed.replace(/%APP_LANDING_URL%/g, appUrls.LANDING);
+          transformed = transformed.replace(/%APP_USER_PROFILE_URL%/g, appUrls.USER_PROFILE);
+          transformed = transformed.replace(/%APP_DASHBOARD_URL%/g, appUrls.DASHBOARD);
+          
+          return transformed;
         },
       },
     ],

@@ -170,36 +170,36 @@
             <div class="countdown-number" id="countdownNumber">60</div>
           </div>
           <div class="countdown-label">seconds</div>
-          <a href="/landing" class="redirect-link">Go to Landing Now →</a>
+          <a href="%APP_LANDING_URL%" class="redirect-link">Go to Landing Now →</a>
         </div>
       </div>
 
       <div class="apps-grid">
-        <a href="/authentication" class="app-card">
+        <a href="%APP_AUTHENTICATION_URL%" class="app-card">
           <span class="app-icon">🔐</span>
           <span class="app-name">Authentication</span>
-          <span class="app-path">/authentication</span>
+          <span class="app-path">%APP_AUTHENTICATION_URL%</span>
           <span class="app-port">Port: 4200</span>
         </a>
 
-        <a href="/landing" class="app-card">
+        <a href="%APP_LANDING_URL%" class="app-card">
           <span class="app-icon">🏠</span>
           <span class="app-name">Landing</span>
-          <span class="app-path">/landing</span>
+          <span class="app-path">%APP_LANDING_URL%</span>
           <span class="app-port">Port: 4201</span>
         </a>
 
-        <a href="/user-profile" class="app-card">
+        <a href="%APP_USER_PROFILE_URL%" class="app-card">
           <span class="app-icon">👤</span>
           <span class="app-name">User Profile</span>
-          <span class="app-path">/user-profile</span>
+          <span class="app-path">%APP_USER_PROFILE_URL%</span>
           <span class="app-port">Port: 4202</span>
         </a>
 
-        <a href="/dashboard" class="app-card">
+        <a href="%APP_DASHBOARD_URL%" class="app-card">
           <span class="app-icon">📊</span>
           <span class="app-name">Dashboard</span>
-          <span class="app-path">/dashboard</span>
+          <span class="app-path">%APP_DASHBOARD_URL%</span>
           <span class="app-port">Port: 4203</span>
         </a>
       </div>
@@ -259,7 +259,7 @@
           if (countdown <= 0) {
             clearInterval(redirectTimer);
             clearInterval(progressTimer);
-            window.location.href = '/landing';
+            window.location.href = '%APP_LANDING_URL%';
           }
         }
 
