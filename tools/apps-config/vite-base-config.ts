@@ -29,6 +29,12 @@ export async function generateViteConfigBase({
   const googleAnalyticsTagId = process.env.VITE_GOOGLE_ANALYTICS_TAG_ID;
   const isLocal = process.env.VITE_APP_ENVIRONMENT === 'local';
   const isProduction = process.env.VITE_APP_ENVIRONMENT === 'production';
+  
+  // Use VITE_BASE_PATH if provided (for GitHub Pages), otherwise use default /${name}
+  const basePath = process.env.VITE_BASE_PATH 
+    ? `${process.env.VITE_BASE_PATH}/${name}`
+    : `/${name}`;
+  
   const defineEnvironment: Record<
     string,
     string | boolean | Record<string, string> | null | undefined
@@ -62,7 +68,7 @@ export async function generateViteConfigBase({
     {
       name: 'html-transform',
       transformIndexHtml(html: string) {
-        return html.replace('%BASE_URL%', `/${name}`);
+        return html.replace('%BASE_URL%', basePath);
       },
     },
     googleAnalyticsTagId
@@ -130,11 +136,6 @@ export async function generateViteConfigBase({
           },
         }
       : undefined;
-
-  // Use VITE_BASE_PATH if provided (for GitHub Pages), otherwise use default /${name}
-  const basePath = process.env.VITE_BASE_PATH 
-    ? `${process.env.VITE_BASE_PATH}/${name}`
-    : `/${name}`;
 
   return {
     base: basePath,
