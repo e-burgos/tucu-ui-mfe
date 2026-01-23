@@ -67,8 +67,14 @@ jobs:
       - name: Build all apps
         id: build
         env:
+          # GitHub Pages deployment configuration
+          # Base domain: https://e-burgos.github.io/tucu-ui-mfe/
+          # All apps deploy under this base path, NOT directly at https://e-burgos.github.io/
+          # Example: landing app deploys to https://e-burgos.github.io/tucu-ui-mfe/landing/
           VITE_APP_ENVIRONMENT: production
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://api.example.com/api' }}
+          # VITE_BASE_PATH sets the repository subdirectory path for all apps
+          # This ensures apps are served from /tucu-ui-mfe/app-name/ not /app-name/
           VITE_BASE_PATH: /${{ github.event.repository.name }}
           VITE_APP_AUTHENTICATION_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/authentication
           VITE_APP_LANDING_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/landing
@@ -80,7 +86,7 @@ jobs:
           echo "landing=dist/apps/landing" >> $GITHUB_OUTPUT
           echo "user-profile=dist/apps/user-profile" >> $GITHUB_OUTPUT
           echo "dashboard=dist/apps/dashboard" >> $GITHUB_OUTPUT
-          echo "dev-server=dist/tools/dev-server" >> $GITHUB_OUTPUT
+          echo "dev-server=dist/apps/dev-server" >> $GITHUB_OUTPUT
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -91,7 +97,7 @@ jobs:
             dist/apps/landing
             dist/apps/user-profile
             dist/apps/dashboard
-            dist/tools/dev-server
+            dist/apps/dev-server
           retention-days: 7
 
   deploy-github-pages:
@@ -121,15 +127,27 @@ jobs:
         env:
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
+          # GitHub Pages deployment structure
+          # Base domain: https://e-burgos.github.io/tucu-ui-mfe/
+          # All apps are deployed under the repository subdirectory
+          # Structure: _site/app-name/ (not _site/ directly at root)
+          # This ensures apps are accessible at: https://e-burgos.github.io/tucu-ui-mfe/app-name/
           mkdir -p _site
 
-          # Copy each app to its respective path
+          # Copy each app to its respective path under _site/
+          # These will be served from: https://e-burgos.github.io/tucu-ui-mfe/app-name/
           cp -r dist/apps/authentication _site/authentication
           cp -r dist/apps/landing _site/landing
           cp -r dist/apps/user-profile _site/user-profile
           cp -r dist/apps/dashboard _site/dashboard
+          cp -r dist/apps/dev-server _site/dev-server
 
-          # Create index.html that redirects to landing
+          # Create .nojekyll to disable Jekyll processing (required for SPA routing)
+          touch _site/.nojekyll
+
+          # Create root index.html that redirects to landing
+          # This handles requests to: https://e-burgos.github.io/tucu-ui-mfe/
+          # Redirects to: https://e-burgos.github.io/tucu-ui-mfe/landing/
           cat > _site/index.html << EOF
           <!DOCTYPE html>
           <html lang="en">
@@ -157,20 +175,35 @@ jobs:
             <title>404 - Page Not Found</title>
             <script>
               // GitHub Pages SPA routing fallback
-              // Redirect to the appropriate app based on path
+              // Extract the path and redirect to the appropriate app
               const path = window.location.pathname;
               const repoName = '${REPO_NAME}';
+              const basePath = '/' + repoName;
               
-              if (path.includes('/authentication')) {
-                window.location.href = '/' + repoName + '/authentication/';
-              } else if (path.includes('/landing')) {
-                window.location.href = '/' + repoName + '/landing/';
-              } else if (path.includes('/user-profile')) {
-                window.location.href = '/' + repoName + '/user-profile/';
-              } else if (path.includes('/dashboard')) {
-                window.location.href = '/' + repoName + '/dashboard/';
+              // Remove the base path to get the app path
+              let appPath = path;
+              if (path.startsWith(basePath)) {
+                appPath = path.substring(basePath.length);
+              }
+              
+              // Ensure appPath starts with /
+              if (!appPath.startsWith('/')) {
+                appPath = '/' + appPath;
+              }
+              
+              // Redirect to the appropriate app based on path
+              if (appPath.startsWith('/authentication') || appPath.includes('/authentication/')) {
+                window.location.href = basePath + '/authentication/';
+              } else if (appPath.startsWith('/landing') || appPath.includes('/landing/')) {
+                window.location.href = basePath + '/landing/';
+              } else if (appPath.startsWith('/user-profile') || appPath.includes('/user-profile/')) {
+                window.location.href = basePath + '/user-profile/';
+              } else if (appPath.startsWith('/dashboard') || appPath.includes('/dashboard/')) {
+                window.location.href = basePath + '/dashboard/';
+              } else if (appPath.startsWith('/dev-server') || appPath.includes('/dev-server/')) {
+                window.location.href = basePath + '/dev-server/';
               } else {
-                window.location.href = '/' + repoName + '/landing/';
+                window.location.href = basePath + '/landing/';
               }
             </script>
           </head>

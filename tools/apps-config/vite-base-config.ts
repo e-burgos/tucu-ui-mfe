@@ -30,7 +30,11 @@ export async function generateViteConfigBase({
   const isLocal = process.env.VITE_APP_ENVIRONMENT === 'local';
   const isProduction = process.env.VITE_APP_ENVIRONMENT === 'production';
   
-  // Use VITE_BASE_PATH if provided (for GitHub Pages), otherwise use default /${name}
+  // Base path configuration
+  // - If VITE_BASE_PATH is set (e.g., /tucu-ui-mfe), each app's base path is: VITE_BASE_PATH + /app-name
+  //   Example: /tucu-ui-mfe/landing, /tucu-ui-mfe/authentication
+  // - If VITE_BASE_PATH is not set (local dev), each app uses its own path: /app-name
+  //   Example: /landing, /authentication
   const basePath = process.env.VITE_BASE_PATH 
     ? `${process.env.VITE_BASE_PATH}/${name}`
     : `/${name}`;

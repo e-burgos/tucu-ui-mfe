@@ -12,6 +12,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   const isLocal = env.VITE_APP_ENVIRONMENT === 'local';
 
+  // Base path for GitHub Pages (if VITE_BASE_PATH is set)
+  const basePath = env.VITE_BASE_PATH 
+    ? `${env.VITE_BASE_PATH}/`
+    : '/';
+
   // Ports for each app (from environment or defaults)
   const authenticationPort = parseInt(env.VITE_APP_AUTHENTICATION_PORT) || 4200;
   const landingPort = parseInt(env.VITE_APP_LANDING_PORT) || 4201;
@@ -169,7 +174,20 @@ export default defineConfig(({ mode }) => {
         ...apiProxyConfig,
       },
     },
-    plugins: [react(), nxViteTsPaths()],
+    base: basePath,
+    plugins: [
+      react(),
+      nxViteTsPaths(),
+      {
+        name: 'html-transform',
+        transformIndexHtml(html: string) {
+          return html.replace(
+            /<base[^>]*>/i,
+            `<base href="${basePath}">`
+          );
+        },
+      },
+    ],
     // Optimize for development performance
     optimizeDeps: {
       // Pre-bundle dependencies for faster startup
@@ -183,7 +201,7 @@ export default defineConfig(({ mode }) => {
       force: false, // Only force on first run
     },
     build: {
-      outDir: '../../dist/tools/dev-server',
+      outDir: '../../dist/apps/dev-server',
       sourcemap: true,
       minify: true,
       reportCompressedSize: true,
