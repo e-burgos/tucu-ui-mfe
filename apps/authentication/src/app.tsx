@@ -3,11 +3,9 @@ import { ShellWrapper } from '@e-burgos-mfe/shell';
 import { LAYOUT_OPTIONS } from '@e-burgos/tucu-ui';
 import { useRoutesConfig } from './router/routes-config';
 import { queryClient } from '@e-burgos-mfe/api';
-import { useAuthGlobalStore } from '@e-burgos-mfe/auth-security';
 
 export function App() {
   const routesConfig = useRoutesConfig();
-  const { isAuthenticated } = useAuthGlobalStore();
 
   return (
     <ShellWrapper
@@ -16,7 +14,7 @@ export function App() {
       layout={LAYOUT_OPTIONS.CLEAN}
       appRoutesConfig={routesConfig}
       loginUrl={APP_PATHS.AUTHENTICATION}
-      isAuthenticated={isAuthenticated}
+      isAuthenticated={true}
       contentClassName="w-full h-full min-h-screen mx-auto my-auto"
     />
   );
