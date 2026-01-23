@@ -92,12 +92,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: |
-            dist/apps/authentication
-            dist/apps/landing
-            dist/apps/user-profile
-            dist/apps/dashboard
-            dist/apps/dev-server
+          # Upload the entire dist/apps directory to preserve structure
+          path: dist/apps
           retention-days: 7
 
   deploy-github-pages:
@@ -120,6 +116,14 @@ jobs:
           name: build-artifacts
           path: dist
 
+      - name: Verify build artifacts
+        run: |
+          echo "Checking build artifacts structure..."
+          ls -la dist/ || echo "dist/ directory not found"
+          ls -la dist/apps/ || echo "dist/apps/ directory not found"
+          echo "Contents of dist/apps/:"
+          ls -la dist/apps/ || true
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -133,6 +137,14 @@ jobs:
           # Structure: _site/app-name/ (not _site/ directly at root)
           # This ensures apps are accessible at: https://e-burgos.github.io/tucu-ui-mfe/app-name/
           mkdir -p _site
+
+          # Verify artifacts exist before copying
+          if [ ! -d "dist/apps/authentication" ]; then
+            echo "Error: dist/apps/authentication not found"
+            ls -la dist/ || true
+            ls -la dist/apps/ || true
+            exit 1
+          fi
 
           # Copy each app to its respective path under _site/
           # These will be served from: https://e-burgos.github.io/tucu-ui-mfe/app-name/
