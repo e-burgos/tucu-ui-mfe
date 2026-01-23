@@ -76,10 +76,19 @@ jobs:
           # VITE_BASE_PATH sets the repository subdirectory path for all apps
           # This ensures apps are served from /tucu-ui-mfe/app-name/ not /app-name/
           VITE_BASE_PATH: /${{ github.event.repository.name }}
+          # APP_URLS - Full URLs for each app
           VITE_APP_AUTHENTICATION_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/authentication
           VITE_APP_LANDING_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/landing
           VITE_APP_USER_PROFILE_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/user-profile
           VITE_APP_DASHBOARD_URL: ${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/dashboard
+          # APP_PATHS - Paths relative to base domain (used for routing)
+          # These include the repository name for GitHub Pages deployment
+          VITE_APP_AUTHENTICATION_PATH: /${{ github.event.repository.name }}/authentication
+          VITE_APP_LANDING_PATH: /${{ github.event.repository.name }}/landing
+          VITE_APP_USER_PROFILE_PATH: /${{ github.event.repository.name }}/user-profile
+          VITE_APP_DASHBOARD_PATH: /${{ github.event.repository.name }}/dashboard
+          # DEV_SERVER path is just the repository name (no app name)
+          VITE_APP_DEV_SERVER_PATH: /${{ github.event.repository.name }}
         run: |
           pnpm build
           echo "authentication=dist/apps/authentication" >> $GITHUB_OUTPUT
