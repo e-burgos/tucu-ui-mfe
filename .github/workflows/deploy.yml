@@ -119,10 +119,12 @@ jobs:
       - name: Verify build artifacts
         run: |
           echo "Checking build artifacts structure..."
+          echo "Contents of dist/:"
           ls -la dist/ || echo "dist/ directory not found"
-          ls -la dist/apps/ || echo "dist/apps/ directory not found"
-          echo "Contents of dist/apps/:"
-          ls -la dist/apps/ || true
+          echo ""
+          echo "When artifacts are downloaded, the structure is flattened:"
+          echo "dist/apps/authentication -> dist/authentication"
+          echo "So we need to check for dist/authentication, not dist/apps/authentication"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -138,21 +140,25 @@ jobs:
           # This ensures apps are accessible at: https://e-burgos.github.io/tucu-ui-mfe/app-name/
           mkdir -p _site
 
+          # Note: When artifacts are downloaded, GitHub Actions flattens the structure
+          # If we upload dist/apps, it downloads as dist/authentication, dist/landing, etc.
+          # So we copy from dist/ directly, not from dist/apps/
+
           # Verify artifacts exist before copying
-          if [ ! -d "dist/apps/authentication" ]; then
-            echo "Error: dist/apps/authentication not found"
+          if [ ! -d "dist/authentication" ]; then
+            echo "Error: dist/authentication not found"
+            echo "Contents of dist/:"
             ls -la dist/ || true
-            ls -la dist/apps/ || true
             exit 1
           fi
 
           # Copy each app to its respective path under _site/
           # These will be served from: https://e-burgos.github.io/tucu-ui-mfe/app-name/
-          cp -r dist/apps/authentication _site/authentication
-          cp -r dist/apps/landing _site/landing
-          cp -r dist/apps/user-profile _site/user-profile
-          cp -r dist/apps/dashboard _site/dashboard
-          cp -r dist/apps/dev-server _site/dev-server
+          cp -r dist/authentication _site/authentication
+          cp -r dist/landing _site/landing
+          cp -r dist/user-profile _site/user-profile
+          cp -r dist/dashboard _site/dashboard
+          cp -r dist/dev-server _site/dev-server
 
           # Create .nojekyll to disable Jekyll processing (required for SPA routing)
           touch _site/.nojekyll
