@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useMainNavigation } from '../hooks';
-import { APP_URLS } from '@e-burgos-mfe/utils';
+import { APP_PATHS } from '@e-burgos-mfe/utils';
 import { QueryProvider } from '@e-burgos-mfe/api';
 import { QueryClient } from '@tanstack/react-query';
 import { AppLabel } from './app-label';
@@ -31,7 +31,7 @@ export const ShellWrapper: React.FC<ShellWrapperProps> = ({
   ...restProps
 }) => {
   const layout = providedLayout ? providedLayout : LAYOUT_OPTIONS.HORIZONTAL;
-  const logo = providedLogo ? providedLogo : { path: APP_URLS.LANDING, name: 'TUCUUI', secondName: 'MFE' };
+  const logo = providedLogo ? providedLogo : { path: APP_PATHS.LANDING, name: 'TUCUUI', secondName: 'MFE' };
   const { mainNavigationItems } = useMainNavigation();
 
   // Compose rightButton with AppLabel
