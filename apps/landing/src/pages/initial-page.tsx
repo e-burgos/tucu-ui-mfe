@@ -420,6 +420,119 @@ const InitialPage = () => {
         </div>
       </section>
 
+      {/* How to test the implementation */}
+      <section className="py-20 lg:py-24 bg-gray-100 bg-light-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <Typography
+              tag="h2"
+              className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+            >
+              How to Test the Implementation
+            </Typography>
+            <Typography
+              tag="p"
+              className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
+            >
+              Step-by-step guide to try login, navigation, and protected routes
+            </Typography>
+          </div>
+
+          <CardContainer className="p-8 lg:p-12 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+            <div className="space-y-8">
+              <div>
+                <Typography
+                  tag="h3"
+                  className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+                >
+                  <LucideIcons.ListOrdered className="w-5 h-5 text-brand" />
+                  Step-by-step: Login and register
+                </Typography>
+                <ol className="list-decimal list-inside space-y-3 text-gray-600 dark:text-gray-400">
+                  <li>
+                    In the header, open the <strong className="text-gray-900 dark:text-white">Options</strong> menu (or the user icon when logged in).
+                  </li>
+                  <li>
+                    Click <strong className="text-gray-900 dark:text-white">Login</strong> to go to the Authentication app.
+                  </li>
+                  <li>
+                    On the auth app you can <strong className="text-gray-900 dark:text-white">Log in</strong> or <strong className="text-gray-900 dark:text-white">Sign up</strong> (Register). Use any email and password; all data is mock. <strong className="text-gray-900 dark:text-white">If you have not registered an account yet, you must do so first</strong> before you can log in.
+                  </li>
+                  <li>
+                    After logging in, you are redirected to the Landing page. From <strong className="text-gray-900 dark:text-white">Options</strong> you can open <strong className="text-gray-900 dark:text-white">Profile</strong> or <strong className="text-gray-900 dark:text-white">Logout</strong>.
+                  </li>
+                </ol>
+              </div>
+
+              <div>
+                <Typography
+                  tag="h3"
+                  className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+                >
+                  <LucideIcons.Database className="w-5 h-5 text-brand" />
+                  Fictitious data and shared state
+                </Typography>
+                <Typography
+                  tag="p"
+                  className="text-gray-600 dark:text-gray-400 mb-2"
+                >
+                  All login and user data in this demo is <strong className="text-gray-900 dark:text-white">mock</strong>. It is stored in the browser&apos;s <strong className="text-gray-900 dark:text-white">localStorage</strong> under the key <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">demo-auth-storage</code>. This serves as an example of sharing state between micro-frontends: the auth store is implemented with <strong className="text-gray-900 dark:text-white">Zustand</strong> and persisted to localStorage, so every app (Landing, Dashboard, User Profile, Authentication) reads the same auth state.
+                </Typography>
+              </div>
+
+              <div>
+                <Typography
+                  tag="h3"
+                  className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+                >
+                  <LucideIcons.Navigation className="w-5 h-5 text-brand" />
+                  Navigating between apps
+                </Typography>
+                <Typography
+                  tag="p"
+                  className="text-gray-600 dark:text-gray-400 mb-3"
+                >
+                  You can move between apps from the <strong className="text-gray-900 dark:text-white">Example Applications</strong> cards above (Authentication, Dashboard, User Profile) or from the header menu. Each app is loaded on its own path; switching apps triggers a full navigation (e.g. <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">/dashboard</code>, <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">/user-profile</code>).
+                </Typography>
+              </div>
+
+              <div>
+                <Typography
+                  tag="h3"
+                  className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+                >
+                  <LucideIcons.Shield className="w-5 h-5 text-brand" />
+                  Protected routes (Dashboard and User Profile)
+                </Typography>
+                <Typography
+                  tag="p"
+                  className="text-gray-600 dark:text-gray-400 mb-3"
+                >
+                  Dashboard and User Profile use <strong className="text-gray-900 dark:text-white">protected routes</strong>: their routes are configured with <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">isPublic: false</code>. If you open Dashboard or User Profile <strong className="text-gray-900 dark:text-white">without being logged in</strong>, Tucu-UI handles it as follows:
+                </Typography>
+                <ul className="space-y-2 text-gray-600 dark:text-gray-400 list-disc list-inside">
+                  <li>
+                    <strong className="text-gray-900 dark:text-white">ShellWrapper</strong> receives <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">isAuthenticated</code> from the Zustand auth store and <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">loginUrl</code> (Authentication app).
+                  </li>
+                  <li>
+                    Private routes are wrapped with an <strong className="text-gray-900 dark:text-white">AuthProvider</strong>. When <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">isAuthenticated === false</code>, the provider renders an <strong className="text-gray-900 dark:text-white">AccessDeniedPage</strong>.
+                  </li>
+                  <li>
+                    <strong className="text-gray-900 dark:text-white">AccessDeniedPage</strong> redirects the user to the login app via <code className="px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-700 text-sm">window.location.href</code>, so unauthenticated users are sent to Authentication to log in before accessing Dashboard or User Profile.
+                  </li>
+                </ul>
+                <Typography
+                  tag="p"
+                  className="text-gray-600 dark:text-gray-400 mt-3"
+                >
+                  To try it: log out (or use a private window), then click on Dashboard or User Profile from the Example Applications section; you should be redirected to the Authentication app.
+                </Typography>
+              </div>
+            </div>
+          </CardContainer>
+        </div>
+      </section>
+
       {/* Documentation Section */}
       <section className="py-20 lg:py-24 bg-light-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
